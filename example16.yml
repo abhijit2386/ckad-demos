@@ -1,0 +1,21 @@
+apiVersion : v1
+kind : Pod
+metadata :
+  name : pv-pod
+  labels :
+    name : pv-pod
+
+spec :
+  containers : 
+    - image : vishymails/tomcatimage:1.0
+      name : tomcat-container
+      volumeMounts :
+        - name : test-volume
+          mountPath : /oracle-pv-volume
+
+
+  volumes :
+    - name : test-volume
+      persistentVolumeClaim :
+        claimName : kube-pvc
+    

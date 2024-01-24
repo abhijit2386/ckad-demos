@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myconfig
+  
+data:
+  my-key: my-value
+  db_host_name : "oraclehost"
+  properties-name : "application1.properties"
+
+  service-details : |
+    components=admissions-service, pathology-service
+    rating=5
+
+  css-properties :
+    color = red
+    background = yellow
+    text-color = black
+
+

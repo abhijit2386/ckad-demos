@@ -1,0 +1,1294 @@
+BR Vishwanath 
+email : vishymails@gmail.com
+linked in : vishwanath b ramachandra rao
+phone : 9845294285
+
+ 
+
+
+
+7  kubectl create -f example1.yml
+    8  kubectl get po 
+    9  kubectl get po -o wide 
+   10  kubectl get nodes 
+   11  kubectl describe pod tomcat-pod
+   12  kubectl get po -o wide 
+   13  ping 192.168.1.4
+   14  kubectl exec -it tomcat-pod -- /bin/sh
+   15  kubectl get po
+   16  kubectl delete pod tomcat-pod
+   17  kubectl get po
+   18  kubectl create -f example1.yml
+   19  kubectl get po
+   20  kubectl delete -f example1.yml
+   21  kubectl exec -it tomcat-pod -- /bin/sh
+   22  kubectl create -f example1.yml
+   23  kubectl exec -it tomcat-pod -- /bin/sh
+   24  history
+
+
+
+ 26  alias g=kubectl 
+   27  g run admin-pod --image=nginx --dry-run=client -o yaml --command sleep 3200
+   28  ls
+   29  g run admin-pod --image=nginx --dry-run=client -o yaml --command sleep 3200 | tee admin-pod.yml
+   30
+
+
+
+ 4  cat > example2.yml
+    5  kubectl create -f example2.yml
+    6  cat > example2.yml
+    7  kubectl create -f example2.yml
+    8  kubectl get po
+    9  kubectl describe rc tomcat-rc
+   10  kubectl get rc 
+   11  kubectl get rc -o wide 
+   12  kubectl scale rc tomcat-rc --replicas=8
+   13  kubectl get rc -o wide 
+   14  kubectl get po
+   15  kubectl describe rc tomcat-rc
+   16  kubectl scale rc tomcat-rc --replicas=3
+   17  kubectl get po
+   18  cls
+   19  clear
+   20  kubectl get po
+   21  kubectl delete pod tomcat-rc-pxql7
+   22  kubectl get po
+   23  kubectl describe rc tomcat-rc
+   24  kubectl delete rc tomcat-rc 
+   25  kubectl describe rc tomcat-rc
+   26  kubectl get po
+
+
+
+
+apiVersion : v1
+kind : ReplicationController
+metadata :
+  name : tomcat-rc 
+
+spec :
+  replicas : 4
+  selector :
+    app : tomcat-app
+
+
+  template : 
+    metadata :
+      name : tomcat-pod 
+      labels : 
+        app : tomcat-app
+    spec :
+      containers :
+        - name : tomcat-container 
+          image : vishymails/tomcatimage:1.0
+          ports :
+            - containerPort : 8080
+
+  
+
+
+
+
+
+
+ 4  kubectl run tomcat-pod1 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+    5  kubectl get po
+    6  kubectl get rc 
+    7  kubectl run tomcat-pod2 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+    8  kubectl run tomcat-pod3 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+    9  kubectl get po
+   10  kubectl get rc 
+   11  kubectl run tomcat-pod4 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+   12  cat > example2.yml
+   13  kubectl create -f example2.yml 
+   14  clear
+   15  kubectl describe rc tomcat-rc 
+   16  kubectl get po
+   17  kubectl delete pod tomcat-pod4
+   18  kubectl get po
+   19  kubectl describe rc tomcat-rc 
+   20  clear
+   21  kubectl delete rc tomcat-rc
+   22  kubectl get po
+   23  kubectl run tomcat-pod1 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+   24  kubectl run tomcat-pod2 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+   25  kubectl run tomcat-pod3 --image=vishymails/tomcatimage:1.0 --labels=app=tomcat-app
+   26  kubectl run tomcat-pod4 --image=nginx --labels=app=tomcat-app
+   27  kubectl get po -o wide 
+   28  kubectl create -f example2.yml 
+   29  kubectl get rc 
+   30  kubectl delete pod tomcat-pod4
+   31  kubectl get po -o wide 
+   32  kubectl describe rc tomcat-rc 
+   33  history
+
+
+
+
+
+
+
+
+ 34  cat > example3.yml
+   35  kubectl create -f example3.yml
+   36  kubectl get rs 
+   37  kubectl get rs -o wide 
+   38  kubectl describe rs tomcat-rs 
+   39  kubectl scale rs tomcat-rs --replicas=6
+   40  kubectl scale rs tomcat-rs --replicas=3
+   41  kubectl delete rs tomcat-rs 
+   42  kubectl delete -f example3.yml
+
+
+
+
+Updating Applications Safely with Replication Controllers
+
+Your team is responsible for managing a critical microservices-based application deployed on Kubernetes. You need to update the application to a new version without causing downtime. The application is currently managed by a Replication Controller. Outline the steps you would take to perform a rolling update of the application while ensuring that there is no impact on users. Consider strategies such as changing the Docker image, monitoring the update progress, and rolling back in case of issues.
+
+
+
+Scaling Applications with Replication Controllers
+
+Your organization is deploying a web application using a Kubernetes cluster with Replication Controllers. The application experiences high traffic during certain periods of the day, and you need to ensure that the number of pod replicas scales dynamically to handle the increased load. Explain how you would configure the Replication Controller to scale the application automatically based on demand. Include details about the relevant parameters and considerations for horizontal pod autoscaling.
+
+
+
+apiVersion : apps/v1
+kind : Deployment
+metadata : 
+  name : tomcat-deploy
+  labels : 
+    app : tomcat-app
+
+spec : 
+  replicas : 3
+  selector : 
+    matchLabels : 
+      app : tomcat-app
+  template :
+    metadata :
+      labels : 
+        app : tomcat-app
+    spec : 
+      containers :
+        - name : tomcat-container 
+          image : vishymails/tomcatimage:1.0
+          ports :
+            - containerPort : 8080
+
+
+
+
+  7  kubectl create -f example4.yml
+    8  kubectl get deploy
+    9  kubectl get deploy -l app=tomcat-app
+   10  kubectl get rs 
+   11  kubectl describe deploy tomcat-deploy
+   12  kubectl get deploy -o wide 
+   13  kubectl set image deploy tomcat-deploy tomcat-container=nginx1.9.1 --record
+   14  kubectl edit deploy tomcat-deploy
+   15  kubectl rollout status deployment/tomcat-deploy
+   16  kubectl set image deploy tomcat-deploy tomcat-container=nginx1.9.1
+   17  kubectl rollout status deployment/tomcat-deploy
+   18  kubectl get deploy -o wide 
+   19  kubectl set image deploy tomcat-deploy tomcat-container=nginx1.9.1
+   20  kubectl rollout status deployment/tomcat-deploy
+   21  kubectl get deploy -o wide 
+   22  kubectl set image deploy tomcat-deploy tomcat-container=nginx1.9.1
+   23  kubectl set image deploy tomcat-deploy tomcat-container=busybox
+   24  kubectl rollout status deployment/tomcat-deploy
+   25  history
+
+kubectl scale deployment tomcat-deploy --replicas=5
+
+kubectl set image deploy tomcat-deploy tomcat-container=nginx1.9.1 --record --record-cause="Pick up patch version"
+
+kubectl annotate deployment/nginx kubernetes.io/change-cause="Pick up patch version"
+   
+
+
+1. Create a Deployment named `nginx` with 3 replicas. The Pods should use the `nginx:1.23.0` image and the name `nginx`. The Deployment uses the label `tier=backend`. The Pod template should use the label `app=v1`.
+2. List the Deployment and ensure that the correct number of replicas is running.
+3. Update the image to `nginx:1.23.4`.
+4. Verify that the change has been rolled out to all replicas.
+5. Assign the change cause "Pick up patch version" to the revision.
+6. Scale the Deployment to 5 replicas.
+7. Have a look at the Deployment rollout history.
+8. Revert the Deployment to revision 1.
+9. Ensure that the Pods use the image `nginx:1.23.0`.
+10. (Optional) Discuss: Can you foresee potential issues with a rolling deployment? How do you configure a update process that first kills all existing containers with the current version before it starts containers with the new version?
+
+
+
+
+
+Create a new deployment called web-proj-268 with image nginx:1.16 and one replica. Next, upgrade the deployment to version 1.17 using rolling update. 
+Make sure that the version upgrade is recorded in the resource annotation.
+
+
+
+Create a new deployment web-003, scale this deployment to 3 replicas, make sure desired number of pods are always running.
+
+
+
+
+
+apiVersion : apps/v1
+kind : Deployment
+metadata : 
+  name : tomcat-deploy
+  labels : 
+    app : tomcat-app
+
+spec : 
+  replicas : 3
+  selector : 
+    matchLabels : 
+      app : tomcat-app
+  strategy :
+    type : Recreate
+  template :
+    metadata :
+      labels : 
+        app : tomcat-app
+    spec : 
+      containers :
+        - name : tomcat-container 
+          image : vishymails/tomcatimage:1.0
+          ports :
+            - containerPort : 8080
+
+
+
+
+
+
+apiVersion : v1
+kind : Service
+metadata :
+  name : my-service
+  labels :
+    app : tomcat-app
+spec :
+  selector :
+    app : tomcat-app
+  type : NodePort
+  ports :
+    - nodePort : 31000
+      port : 80
+      targetPort : 8080
+
+      
+
+
+
+  4  cat > example5.yml
+    5  cat > example6.yml
+    6  kubectl create -f example5.yml
+    7  kubectl get po -o wide 
+    8  kubectl create -f example6.yml
+    9  kubectl get svc 
+   10  kubectl describe svc my-service
+   11  curl http://192.168.1.4:8080
+   12  curl http://192.168.1.5:8080
+   13  curl http://192.168.1.6:8080
+   14  kubectl get nodes -o wide 
+   15  http://172.30.2.2:31000
+   16  curl http://172.30.2.2:31000
+   17  history
+
+
+
+
+
+apiVersion : v1
+kind : Service
+metadata :
+  name : my-service
+  labels :
+    app : tomcat-app
+spec :
+  selector :
+    app : tomcat-app
+  type : LoadBalancer
+  ports :
+    - nodePort : 31000
+      port : 8080
+      targetPort : 8080
+
+      
+
+
+
+20  cat > example7.yml
+   21  kubectl create -f example7.yml
+   22  kubectl get svc
+   23  kubectl describe svc my-service
+   24  curl http://10.110.130.139:8080
+   25  history
+
+
+
+
+
+
+Expose "date-web-app" pod to by creating a service "date-web-app-service" on port 30002 on nodes of given cluster.
+
+
+ 28  g run date-web-app --image=nginx --port=8080
+   29  g expose pod date-web-app --name=date-web-app-svc --type=NodePort --dry-run=client -o yaml | tee date-web-svc.yaml
+   30  g expose pod date-web-app --name=date-web-app-svc --type=NodePort
+   31  history
+
+
+apiVersion : v1
+kind : Pod
+metadata : 
+  name : tomcat-pod
+spec : 
+  containers : 
+    - image : vishymails/tomcatimage:1.0
+      name : tomcat-container
+      volumeMounts :
+        - name : cache-volume
+          mountPath : /oracle-volume
+  volumes :
+    - name : cache-volume
+      emptyDir : {}
+
+
+
+
+ 4  cat > example8.yml
+    5  kubectl create -f example8.yml
+    6  kubectl get po -o wide 
+    7  kubectl exec -it tomcat-pod -- bin/sh
+    8  kubectl exec -it tomcat-pod -- /bin/sh
+    9  kubectl delete pod tomcat-pod
+   10  kubectl create -f example8.yml
+   11  kubectl exec -it tomcat-pod -- /bin/sh
+   12  history
+
+
+cat pod.yaml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multicontainer-pod
+spec:
+  containers:
+  - image: ubuntu
+    name: producer
+    command: ["/bin/bash"]
+    args: ["-c", "while true; do echo $(hostname) $(date) >> /var/log/index.html; sleep 10; done"]
+    volumeMounts:
+    - name: webcontent
+      mountPath: /var/log
+  - image: nginx
+    name: consumer
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: webcontent
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: webcontent
+    emptyDir: {}
+
+   14  kubectl exec -it multicontainer-pod -- sh
+         # cat /var/log/index.html
+
+   15  kubectl exec -it multicontainer-pod -c consumer -- sh
+         # cat /usr/share/nginx/html/index.html
+
+
+
+
+
+
+apiVersion : v1
+kind : PersistentVolume
+metadata :
+  name : kube-pv1
+spec :
+  capacity :
+    storage : 1Gi
+  volumeMode : Filesystem
+  accessModes :
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy : Recycle
+  nfs :
+    path : /var/nfs/general
+    server : 192.168.86.128
+    readOnly : false
+    
+
+
+
+
+
+
+
+apiVersion : v1
+kind : PersistentVolume
+metadata :
+  name : pv-gce
+spec :
+  capacity :
+    storage : 15Gi
+  accessModes :
+    - ReadWriteMany
+  storageClassName : slow
+  gcePersistentDisk :
+    pdName : my-data-disk
+    fsType : ext4
+
+    
+
+
+
+
+
+apiVersion : v1
+kind : PersistentVolume
+metadata :
+  name : kube-pv
+  labels :
+    type : local
+spec :
+  storageClassName : manual
+  capacity :
+    storage : 1Gi
+  accessModes :
+    - ReadWriteOnce
+  hostPath :
+    path : /mnt/datas
+
+    
+
+
+
+
+
+apiVersion : v1
+kind : PersistentVolumeClaim
+metadata :
+  name : kube-pvc
+spec :
+  storageClassName : manual
+  resources :
+    requests :
+      storage : 1Gi
+  accessModes :
+    - ReadWriteOnce
+
+    
+
+
+
+
+ 4  cat > example12.yml
+    5  cat > example13.yml
+    6  kubectl create -f example12.yml
+    7  cat > example13.yml
+    8  kubectl create -f example12.yml
+    9  cat > example12.yml
+   10  kubectl create -f example12.yml
+   11  kubectl create -f example13.yml
+   12  kubectl get pv
+   13  cat > example14.yml
+   14  cat > example15.yml
+   15  kubectl create -f example14.yml
+   16  kubectl get pv
+   17  kubectl create -f example15.yml
+   18  kubectl get pvc
+   19  kubectl get pv
+
+
+
+ example18.yml
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+  volumeBindingMore: WaitForFirstConsumer
+allowedTopologies:
+  - matchLabelExpressions:
+      - key: topology.kubernetes.io/zone
+        values:
+          - us-central-la
+          - us-central-lb
+
+
+
+29  cat > example18.yml
+   30  kubectl create -f example18.yml
+   31  kubectl get sc
+   32  hi
+
+
+
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: slow
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: io1
+  iopsPerGB: "10"
+  fsType: ext4
+
+
+
+
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name : fluent-ds
+spec:
+  template:
+    metadata:
+      labels:
+        name : fluentd
+    spec:
+      containers:
+      - name: fluentd
+        image: gcr.io/google-containers/fluentd-elasticsearch:1.20
+  selector :
+    matchLabels:
+      name : fluentd
+
+
+
+
+
+
+ 4  echo -n 'root' | base64 > username.txt
+    5  echo -n 'master@123' | base64 > password.txt
+    6  ls
+    7  kubectl get secrets
+    8  kubectl create secret generic db-user-pass --from-file=./username.txt --from-file=./password.txt
+    9  kubectl get secrets
+   10  kubectl describe secrets db-user-pass
+   11  cat username.txt
+   12  cat password.txt
+   13  cat > example21.yml
+   14  kubectl create -f example21.yml 
+   15  cat > example21.yml
+   16  kubectl create -f example21.yml 
+   17  kubectl get secrets
+   18  kubectl describe secrets mysecret
+
+
+
+
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username : cm9vdA==
+  password : bWFzdGVyQDEyMw==
+
+
+
+
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysecretpod
+  labels:
+    name: mysecretpod
+spec:
+  containers:
+  - name: mysecretpod
+    image: redis
+    volumeMounts:
+      - name: foo
+        mountPath: "/etc/secret"
+        readOnly : true
+    
+  volumes :
+    - name : foo
+      secret : 
+        secretName : mysecret
+
+  
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-env-pod
+  
+spec:
+  containers:
+  - name: mycontainer
+    image: redis
+    env :
+      - name : SECRET_USERNAME
+        valueFrom : 
+          secretKeyRef:
+            name : mysecret
+            key: username
+      
+      - name : SECRET_PASSWORD
+        valueFrom : 
+          secretKeyRef:
+            name : mysecret
+            key: password
+  restartPolicy: Never
+
+  
+
+
+
+
+
+20  cat > example22.yml
+   21  kubectl create -f example22.yml 
+   22  kubectl get po
+   23  kubectl exec -it mysecretpod -- /bin/sh
+   24  cat > example23.yml
+   25  kubectl create -f example23.yml 
+   26  kubectl exec -it secret-env-pod  -- /bin/sh
+   27  history
+
+
+
+
+kubectl get pods 
+kubectl logs <pod-name>
+kubectl logs <pod-name> -c <container-name>
+
+follow flag 
+kubectl logs -f <pod-name>  
+
+
+timestamps 
+-p or --previous for collecting last container instance 
+kubectl log --timestamps -p <pod-name>
+kubectl log -p <pod-name>
+
+
+tail specific number of lines 
+kubectl logs --tail=100 <pod-name>
+
+
+
+
+
+
+
+application1.properties 
+
+
+management.endpoints.enabled-by-default=true 
+management.endpoint.info.enabled=true 
+management.security.enabled=false 
+management.endpoints.web.exposure.include=*
+
+
+
+
+
+application2.properties
+
+
+server.port= 9000
+server.servlet.context-path=/oracle 
+oracleprops.greeting= Thank you and visit again - altered 
+oracleprops.greeting1= New Data
+
+
+ 4  kubectl create configmap my-config-map --from-literal=key1=value1 --from-literal=key2=value2
+    5  kubectl create configmap my-config-map1 --from-file=./application1.properties --from-file=./application2.properties
+    6  cat > application1.properties
+    7  cat > application2.properties
+    8  kubectl create configmap my-config-map1 --from-file=./application1.properties --from-file=./application2.properties
+    9  kubectl get cm
+ 
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myconfig
+  
+data:
+  my-key: my-value
+  db_host_name : "oraclehost"
+  properties-name : "application1.properties"
+
+  service-details : |
+    components=admissions-service, pathology-service
+    rating=5
+
+  css-properties :
+    color = red
+    background = yellow
+    text-color = black
+
+
+
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myconfigpod
+  labels:
+    name: myconfigpod
+spec:
+  containers:
+  - name: myconfigpod
+    image: redis
+    volumeMounts:
+      - name: foo
+        mountPath: "/etc/config"
+        readOnly : true
+    
+  volumes :
+    - name : foo
+      configMap :
+        name : myconfig
+
+        
+
+
+
+
+  10  kubectl describe configmap my-config-map
+   11  kubectl describe configmap my-config-map1
+   12  cat > example23.yml
+   13  kubectl apply -f example23.yml 
+   14  kubectl get cm
+   15  cat > example25.yml
+   16  kubectl apply -f example25.yml 
+   17  kubectl get po
+   18  kubectl exec -it myconfigpod -- /bin/bash
+   19  history
+
+
+
+kubectl rollout restart deployment <deployment-name>
+
+
+
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: countdown-ttl
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata :
+        name : countdown
+    spec:
+      containers:
+      - name: counter
+        image: centos:7
+        command:
+          - "bin/bash"
+          - "-c"
+          - "for i in 9 8 7 6 5 4 3 2 1 0; do echo $i; done"
+      restartPolicy: Never
+
+
+
+
+
+
+
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep20
+spec:
+  completions : 3
+  parallelism : 6
+
+  template:
+    spec:
+      containers:
+      - name: sleep20
+        image: centos:7
+        command: ["python",
+                  "-c",
+                  "import time; print('Started');
+                  time.sleep(20); print('finished')"
+        ]
+      restartPolicy: Never
+      
+
+
+
+
+
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-demo
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata :
+          labels :
+            name : cron-demo
+        spec:
+          containers:
+          - name: cron-demo
+            image: centos:7
+            command:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: Never
+
+          
+
+
+
+
+
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-demo1
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 100
+      completions : 3
+      parallelism : 6
+      template:
+        metadata :
+          labels :
+            name : cron-demo1
+        spec:
+          containers:
+          - name: cron-demo1
+            image: centos:7
+            command:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: Never
+
+          
+
+
+
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  my-ns1
+
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  my-ns2
+
+
+
+
+
+
+  
+
+
+apiVersion : v1
+kind : Pod
+metadata :
+  name : tomcat-pod
+  namespace : my-ns1
+  labels : 
+    app : tomcat
+    tier : dev
+
+spec :
+  containers :
+    - name : tomcat-container 
+      image : vishymails/tomcatimage:1.0
+
+
+
+
+4  kubectl create namespace ckad
+  5  cat > example30.yml
+    6  kubectl get ns
+    7  kubectl create -f example30.yml 
+    8  kubectl get ns
+    9  kubectl get po
+   10  cat > example1.yml
+   11  kubectl create -f example1.yml 
+   12  kubectl get po
+   13  kubectl get po -n default
+   14  cat > example31.yml
+   15  kubectl create -f example31.yml 
+   16  kubectl get po -n default
+   17  kubectl get po -n my-ns1
+   18  kubectl get po --all-namespaces
+   19  kubectl run nginx --image=nginx --namespace=my-ns1
+   20  kubectl get po -n my-ns1
+   21  kubectl get po 
+   22  kubectl config set-context --current --namespace=my-ns1
+   23  kubectl get po 
+
+
+
+
+
+
+
+apiVersion : v1
+kind : Pod
+metadata :
+  name : init-container-demo
+spec :
+  containers : 
+    - name : tomcat-container
+      image : vishymails/tomcatimage:1.0
+      ports :
+        - containerPort : 8080
+  initContainers :
+    - name : init-container-ubuntu
+      image : ubuntu
+      command : ['sh', '-c', 'echo first init container' ]
+
+    - name : init-container-busybox
+      image : busybox
+      command : ['sh', '-c', 'echo second init container' ]
+
+    - name : init-container-nginx
+      image : nginx
+      command : ['sh', '-c', 'echo third init container' ]
+
+    
+
+
+
+
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-resource-metrics-memory
+spec:
+  scaleTargetRef:
+    apiVersion: v1
+    kind: Deployment
+    name: tomcat-deploy
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: 500Mi
+
+
+
+
+
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-resource-metrics-memory
+spec:
+  scaleTargetRef:
+    apiVersion: v1
+    kind: Deployment
+    name: tomcat-deploy
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+
+
+
+
+
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.5.0/components.yaml
+
+kubectl top nodes
+kubectl top pods 
+
+
+
+
+
+
+
+
+apiVersion : apiextensions.k8s.io/v1
+kind : CustomResourceDefinition
+metadata :
+  name : backups.bvr.com
+spec :
+  group : bvr.com
+  versions :
+    - name : v1
+      served : true
+      storage : true
+      schema :
+        openAPIV3Schema :
+          type : object
+          properties :
+            spec :
+              type : object
+              properties :
+                cronExpression :
+                  type : string
+                podName :
+                  type : string
+                path :
+                  type : string
+  scope : Namespaced
+  names :
+    kind : Backup
+    singular : backup
+    plural : backups
+    shortNames :
+      - bu
+
+
+
+
+
+
+apiVersion : bvr.com/v1
+kind : Backup
+metadata :
+  name : nginx-backup
+spec : 
+  cronExpression : "0 0 * * *"
+  podName : tomcat-pod
+  path : /usr/local/tomcatpod
+
+
+
+
+
+
+
+
+
+
+ 21  kubectl get po -n kube-system
+   22  cat > example37.yml
+   23  kubectl apply -f example37.yml
+   24  kubectl get crd 
+   25  kubectl get po 
+   26  cat > example38.yml
+   27  cat > example1.yml
+   28  kubectl apply -f example1.yml
+   29  kubectl apply -f example38.yml
+   30  kubectl get backups
+   31  cd /usr/local/tomcatpod
+   32  clear
+   33  kubectl describe backup nginx-backup
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app-pod
+spec:
+  containers:
+    - name: my-app-container
+      image: my-app-image
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        initialDelaySeconds: 15
+        periodSeconds: 10
+
+
+# A liveness probe can be configured for a container in a pod, and Kubernetes periodically executes the specified probe action (HTTP request, TCP socket check, or running a command) to determine if the container is still alive. If the probe action fails a certain number of times in a row, Kubernetes will consider the container as unhealthy and take corrective actions, which may include restarting the container.
+
+
+
+
+
+
+
+
+apiVersion : certificates.k8s.io/v1
+kind : CertificateSigningRequest
+metadata : 
+  name : nec-adm
+spec :
+  request : LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQzdUQ0NBZFVDQVFBd2dZb3hDekFKQmdOVkJBWVRBa2xPTVJJd0VBWURWUVFJREFsTFlYSnVZWFJoYTJFeApFakFRQmdOVkJBY01DVUpoYm1kaGJHOXlaVEVOTUFzR0ExVUVDZ3dFU1ZOU1R6RVJNQThHQTFVRUN3d0lVbVZ6ClpXRnlZMmd4RERBS0JnTlZCQU1NQTJKMmNqRWpNQ0VHQ1NxR1NJYjNEUUVKQVJZVWRtbHphSGx0WVdsc2MwQm4KYldGcGJDNWpiMjB3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRElMdlA4eElybwpzR2w1OWxaOUJqTFVZSUNpdlVBOVFIa2g2dVlrMnV5bWVRMFRldldjcTJkOWUzMUx1S2N2K0xRV0wzdHJjT3Y4CnNnTDljSGV0Q0p6bkI3VDFNUVRzcjFMWHJPUHpjbDc1czZsS3ViSEV6RkVGVGMvblFPcUVMaVFGZGpXRTZvTmQKdERWemk4QnliOTRsakM1SXY5bHhCZlpNMHNSdWE5QnlhaUVvRWRkSFpaUTRsVUlVQ1A0WUg3UFVzM1R2THFJYgo0REdVM0xadDNGdXR2dzYxd21tak5DMnJyN1FlMm8xUzJWYVJrOGtGY1prUmZTdEtPODZQRmMxa3hXYTl1OHozCkRrVllZanlSa0d4dnVzTEQydUVaUDN2K250clNidytOeDZCc2lnRWdqNTh4b0dIcEh2WDBXK0JhMVpJdTAycFMKQWJmb3RyZG56aE1CQWdNQkFBR2dIVEFiQmdrcWhraUc5dzBCQ1FjeERnd01jR0Z6YzNkdmNtUkFNVEl6TUEwRwpDU3FHU0liM0RRRUJDd1VBQTRJQkFRQU1rNElrNU4vZXhEZ3hnZkRVVytLSVhHSFl1MDRxdTN5Zk5CM2x0K2lUCjhPbTVadk5nR0FTRzdxQmkvditDeWpBV3Z5UG5oWCtUNEl4bStOMkpnL0E2eU9tYS9peDlmdVNodWlGblVueVcKelF6bTQ4dzVab1NMSUg2TW8reHd6STFXdW1zaU9NaGdjaVpCN0tZaFp2aHJXUDlpUTc4QTdWOXlxMU40NzNGcwpISjlEZlhBREJkZXRQOS9BWU1wNE9vcE9FSWJhQTRBRmNMMU9qRCtobG94MEZDdURDOG9yTW9oUUxFaTNKR3IzCjE0Q0RPd2c2cDJGa1VVa0dCTHpPRmh4NW83UXhTU21BWXVvdVJUVXN0Nm9sSFVSSTVMR3BRQWhNOURLMm5hV04KemZpdzdJYUM3cnZxall5SWJkRThRTmRTazJOSGdNS2YvanFvWUdBYlAvbmwKLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+  signerName : kubernetes.io/kube-apiserver-client
+  usages :
+    - client auth
+    
+
+
+
+
+
+apiVersion : rbac.authorization.k8s.io/v1
+kind : Role
+metadata :
+  namespace : nec 
+  name : pod-admin
+rules :
+  - apiGroups : [""]
+    resources : ["pods"]
+    verbs : ["get", "watch", "list", "create", "delete", "update"]
+
+    
+
+
+
+
+
+apiVersion : rbac.authorization.k8s.io/v1
+kind : RoleBinding
+metadata :
+  namespace : nec 
+  name : admin-pods
+subjects :
+  - kind : User
+    name : nec-adm
+    apiGroup : rbac.authorization.k8s.io
+roleRef :
+  kind : Role
+  name : pod-admin
+  apiGroup : rbac.authorization.k8s.io
+
+  
+
+
+
+
+
+
+apiVersion : v1
+kind : Pod
+metadata :
+  name : tomcat-pod
+  namespace : nec
+  labels : 
+    app : tomcat
+    tier : dev
+
+spec :
+  containers :
+    - name : tomcat-container 
+      image : vishymails/tomcatimage:1.0
+
+
+
+
+
+
+
+
+
+ 6  alias g=kubectl
+    7  g create ns nec
+    8  openssl genrsa -out nec-adm.key 2048
+    9  openssl req -new -key nec-adm.key -out nec-adm.csr
+   10  ls
+   11  g get ns 
+   12  g get ns nec
+   13  cat nec-adm.csr | base64 | tr -d "\n"
+   14  cat > example40.yml
+   15  kubectl create -f example40.yml
+   16  g get csr
+   17  g certficate approve nec-adm
+   18  g certificate approve nec-adm
+   19  g get csr
+   20  cat > example41.yml
+   21  kubectl create -f example41.yml
+   22  kubectl get role -n nec
+   23  cat > example42.yml
+   24  kubectl create -f example42.yml
+   25  kubectl get rolebinding -n nec
+   26  g auth can-i get pods -n nec --as nec-adm
+   27  g auth get pods -n nec --as nec-adm
+   28  g get pods -n nec --as nec-adm
+   29  cat > example43.yml
+   30  kubectl create -f example43.yml
+   31  g get pods -n nec --as nec-adm
+   32  g auth list pods -n nec --as nec-adm
+   33  g auth can-i list pods -n nec --as nec-adm
+   34  history
+controlplane $ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   
+controlplane $ kubectl config view        
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://172.30.1.2:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: DATA+OMITTED
+    client-key-data: DATA+OMITTED
+controlplane
